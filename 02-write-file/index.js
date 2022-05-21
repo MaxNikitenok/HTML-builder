@@ -6,7 +6,6 @@ const rl = readline.createInterface(stdin, stdout);
 const writeStream = fs.createWriteStream(path.join(__dirname, 'text.txt'));
 
 fs.writeFile(path.join(__dirname, 'text.txt'), '', (err) => {if(err) throw err;});
-
 stdout.write('Здравствуйте, пожалуйста введите текст...\n');
 
 rl.on('line', input => {
