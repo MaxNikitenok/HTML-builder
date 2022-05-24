@@ -60,6 +60,10 @@ function rm(){
           });
         });
       });
+    } else if (err.code === 'ENOENT') {
+      fs.mkdir(path.join(__dirname, 'project-dist', 'assets'), () => {
+        addAss();
+      });
     }
   });
 }
