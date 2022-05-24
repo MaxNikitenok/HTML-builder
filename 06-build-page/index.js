@@ -3,10 +3,11 @@ const path = require('path');
 const writeStream = fs.createWriteStream(path.join(__dirname, 'project-dist', 'style.css'));
 let flag = 0;
 
-fs.mkdir(path.join(__dirname, 'project-dist'), () => {
-});
+rm();
 
-fs.copyFile(path.join(__dirname, 'template.html'), path.join(__dirname, 'project-dist', 'index.html'), () => {
+fs.mkdir(path.join(__dirname, 'project-dist'), () => {
+  fs.copyFile(path.join(__dirname, 'template.html'), path.join(__dirname, 'project-dist', 'index.html'), () => {
+  });
 });
 /*---------render-index-------*/
 fs.readdir(path.join(__dirname, 'components'), (err, items) => {
@@ -43,23 +44,48 @@ fs.writeFile(path.join(__dirname, 'project-dist', 'style.css'), '', () => {
     });
   });
 });
-/*-------------assets         */
-fs.mkdir(path.join(__dirname, 'project-dist', 'assets'), () => {
-});
-
-fs.readdir(path.join(__dirname, 'assets'), function(err, items) {
-  items.forEach(item => {
-    fs.stat(path.join(__dirname, 'assets', item), function(err, stats) {
-      if(stats.isDirectory()) {
-        fs.mkdir(path.join(__dirname, 'project-dist', 'assets', item), () => {
-        });
-        fs.readdir(path.join(__dirname, 'assets', item), function(err, files) {
-          files.forEach(file => {
-            fs.copyFile(path.join(__dirname, 'assets', item, file), path.join(__dirname, 'project-dist', 'assets', item, file), () => {
+/*----------------rm-add-------------------- */
+function rm(){
+  fs.stat(path.join(__dirname, 'project-dist', 'assets'), function(err) {
+    if (!err) {
+      fs.readdir(path.join(__dirname, 'project-dist', 'assets'), (err, dirrs) => {
+        dirrs.forEach(dir => {
+          fs.readdir(path.join(__dirname, 'project-dist', 'assets', dir), (err, files) => {
+            files.forEach(file => {
+              fs.rm(path.join(__dirname, 'project-dist', 'assets', dir, file), () =>{
+                console.log('удален ' + file);
+              });
             });
+            ass();
           });
         });
-      }
+      });
+    }
+    else if (err.code === 'ENOENT') {
+      fs.mkdir(path.join(__dirname, 'project-dist', 'assets'), () => {
+        ass();
+      });
+    }
+  });
+}
+/*-------------assets         */
+function ass() {
+  fs.readdir(path.join(__dirname, 'assets'), function(err, items) {
+    items.forEach(item => {
+      fs.stat(path.join(__dirname, 'assets', item), function(err, stats) {
+        if(stats.isDirectory()) {
+          fs.mkdir(path.join(__dirname, 'project-dist', 'assets', item), () => {
+          });
+          fs.readdir(path.join(__dirname, 'assets', item), function(err, files) {
+            files.forEach(file => {
+              fs.copyFile(path.join(__dirname, 'assets', item, file), path.join(__dirname, 'project-dist', 'assets', item, file), () => {
+                console.log('скопированн ' + file);
+              });
+            });
+          });
+        }
+      });
     });
   });
-});
+}
+
