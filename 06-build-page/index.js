@@ -8,7 +8,6 @@ function addBase() {
     fs.copyFile(path.join(__dirname, 'template.html'), path.join(__dirname, 'project-dist', 'index.html'), () => {
     });
   });
-  /*---------render-index-------*/
   fs.readdir(path.join(__dirname, 'components'), (err, items) => {
     let components = [];
     items.forEach(item => {
